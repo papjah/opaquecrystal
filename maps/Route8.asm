@@ -154,9 +154,11 @@ SupernerdTomBeatenText:
 	done
 
 SupernerdTomAfterBattleText:
-	text "GYM BADGES give"
-	line "you advantages in"
-	cont "battles."
+	text "Contrary to pop-"
+	line "ular belief,"
+	cont "GYM BADGES don't"
+	cont "give any advant-"
+	cont "ages in battle."
 	done
 
 Route8LockedDoorText:
