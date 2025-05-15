@@ -8,3 +8,6 @@ Added:
 Removed:
 - Removed the 25% of failure for AI status moves
 - Removed badge boosts and all text references to them
+
+Changed:
+- Improved the outdoor sprite system for outdoor maps and removing redundant sprites
