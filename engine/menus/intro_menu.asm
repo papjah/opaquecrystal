@@ -282,6 +282,7 @@ InitializeWorld:
 	call ShrinkPlayer
 	farcall SpawnPlayer
 	farcall _InitializeStartDay
+	farcall _InitializeEvents
 	ret
 
 LoadOrRegenerateLuckyIDNumber:
