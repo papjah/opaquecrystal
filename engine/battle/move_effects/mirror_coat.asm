@@ -30,7 +30,7 @@ BattleCommand_MirrorCoat:
 	and a
 	ret z
 
-	ld a, [wStringBuffer1 + MOVE_TYPE]
+	ld a, [wStringBuffer1 + MOVE_CATEGORY]
 	cp SPECIAL
 	ret c
 

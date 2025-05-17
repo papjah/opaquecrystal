@@ -6,7 +6,7 @@ GetBattleVar::
 
 GetBattleVarAddr::
 ; Get variable from pair a, depending on whose turn it is.
-; There are 21 variable pairs.
+; There are 22 variable pairs.
 	push bc
 
 	ld hl, BattleVarPairs
@@ -64,6 +64,7 @@ BattleVarPairs:
 	dw .MoveEffect
 	dw .MovePower
 	dw .MoveType
+	dw .MoveCategory
 	dw .CurMove
 	dw .LastCounter
 	dw .LastCounterOpp
@@ -88,6 +89,7 @@ BattleVarPairs:
 .MoveEffect:     db PLAYER_MOVE_EFFECT,    ENEMY_MOVE_EFFECT
 .MovePower:      db PLAYER_MOVE_POWER,     ENEMY_MOVE_POWER
 .MoveType:       db PLAYER_MOVE_TYPE,      ENEMY_MOVE_TYPE
+.MoveCategory:   db PLAYER_MOVE_CATEGORY,  ENEMY_MOVE_CATEGORY
 .CurMove:        db PLAYER_CUR_MOVE,       ENEMY_CUR_MOVE
 .LastCounter:    db PLAYER_COUNTER_MOVE,   ENEMY_COUNTER_MOVE
 .LastCounterOpp: db ENEMY_COUNTER_MOVE,    PLAYER_COUNTER_MOVE
@@ -107,6 +109,7 @@ BattleVarLocations:
 	dw wPlayerMoveStructEffect,    wEnemyMoveStructEffect
 	dw wPlayerMoveStructPower,     wEnemyMoveStructPower
 	dw wPlayerMoveStructType,      wEnemyMoveStructType
+	dw wPlayerMoveStructCategory,  wEnemyMoveStructCategory
 	dw wCurPlayerMove,             wCurEnemyMove
 	dw wLastPlayerCounterMove,     wLastEnemyCounterMove
 	dw wLastPlayerMove,            wLastEnemyMove

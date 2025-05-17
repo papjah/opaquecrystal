@@ -2593,13 +2593,16 @@ PlayerAttackDamage:
 
 	call ResetDamage
 
-	ld hl, wPlayerMoveStructPower
-	ld a, [hli]
+; No damage dealt with 0 power
+	ld a, [wPlayerMoveStructPower]
 	and a
 	ld d, a
 	ret z
 
-	ld a, [hl]
+; Get the player move's category. SPECIAL is larger than
+; PHYSICAL and thus we should jump only if the move category
+; is SPECIAL or greater
+	ld a, [wPlayerMoveStructCategory]
 	cp SPECIAL
 	jr nc, .special
 
@@ -2731,7 +2734,7 @@ CheckDamageStatsCritical:
 	ldh a, [hBattleTurn]
 	and a
 	jr nz, .enemy
-	ld a, [wPlayerMoveStructType]
+	ld a, [wPlayerMoveStructCategory]
 	cp SPECIAL
 ; special
 	ld a, [wPlayerSAtkLevel]
@@ -2745,7 +2748,7 @@ CheckDamageStatsCritical:
 	jr .end
 
 .enemy
-	ld a, [wEnemyMoveStructType]
+	ld a, [wEnemyMoveStructCategory]
 	cp SPECIAL
 ; special
 	ld a, [wEnemySAtkLevel]
@@ -2848,13 +2851,15 @@ EnemyAttackDamage:
 	call ResetDamage
 
 ; No damage dealt with 0 power.
-	ld hl, wEnemyMoveStructPower
-	ld a, [hli] ; hl = wEnemyMoveStructType
+	ld a, [wEnemyMoveStructPower]
 	ld d, a
 	and a
 	ret z
 
-	ld a, [hl]
+; Get the enemy move's category. SPECIAL is larger than
+; PHYSICAL and thus we should jump only if the move category
+; is SPECIAL or greater
+	ld a, [wEnemyMoveStructCategory]
 	cp SPECIAL
 	jr nc, .special
 

@@ -35,7 +35,7 @@ function register_bank(amount) {
 	rom_bank = 0 # Reject upcoming banks by default
 
 	if (BANK ~ /all/ || BANK == bank_num) {
-		printf "Bank %3d: %5d/16384 (%.2f%%)\n", bank_num, amount, amount * 100 / 16384
+		printf "Bank %3d (%x): %5d/16384 (%.2f%%)\n", bank_num, bank_num, amount, amount * 100 / 16384
 	}
 }
 function register_bank_str(str) {
