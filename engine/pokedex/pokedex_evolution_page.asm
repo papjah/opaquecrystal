@@ -484,12 +484,9 @@ EVO_place_Mon_Types:
 
 ; set up the palette based on the current mon slot
 	ld a, [wBaseType1]
-	ld c, a
-	call EVO_adjust_type_index
-	ld d, c
+	ld d, a
 	ld a, [wBaseType2]
 	ld c, a ; type 2
-	call EVO_adjust_type_index
 	ld b, d
 	call .determine_paladdr ; pal 1, 2, 3, or 4
 	farcall LoadDexTypePals
@@ -497,9 +494,6 @@ EVO_place_Mon_Types:
 	call DelayFrame
 
 	ld a, [wBaseType1]
-	ld c, a
-	call EVO_adjust_type_index
-	ld a, c
 	ld hl, TypeLightIconGFX
 	ld bc, 4 * LEN_2BPP_TILE
 	call AddNTimes
@@ -531,10 +525,6 @@ EVO_place_Mon_Types:
 	ld a, [wBaseType2]
 	cp b
 	jp z, .done
-	ld c, a ; type 2
-	call EVO_adjust_type_index
-
-	ld a, c ; type 2
 ; load type 2 tiles
 	ld hl, TypeDarkIconGFX ; DexTypeDarkIconGFX
 	ld bc, 4 * LEN_2BPP_TILE
@@ -642,19 +632,6 @@ EVO_type2_gethlcoord:
 	dec hl
 	pop af
 	pop bc
-	ret
-
-EVO_adjust_type_index:
-	ld a, c
-; Skip Bird
-	cp BIRD
-	jr c, .done
-	cp UNUSED_TYPES
-	dec a
-	jr c, .done
-	sub UNUSED_TYPES
-.done
-	ld c, a
 	ret
 
 EVO_place_Mon_Icon:

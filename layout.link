@@ -61,11 +61,13 @@ ROMX $0c
 	"Tileset Data 4"
 ROMX $0d
 	"Effect Commands"
+	
 ROMX $0e
 	"Enemy Trainers"
 	"Enemy Trainer Parties 2"
 ROMX $0f
 	"Battle Core"
+	
 ROMX $10
 	"bank10"
 	"Evolutions and Attacks Pointers"
@@ -109,6 +111,8 @@ ROMX $1f
 	"Map Scripts 10"
 ROMX $20
 	"bank20"
+	"Enemy Trainer Parties 3"
+	"Enemy Trainer Parties 4"
 ROMX $21
 	"bank21"
 ROMX $22

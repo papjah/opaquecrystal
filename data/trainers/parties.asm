@@ -2466,6 +2466,8 @@ BugCatcherGroup:
 
 	end_list_items
 
+SECTION "Enemy Trainer Parties 3", ROMX
+
 FisherGroup:
 	next_list_item ; FISHER (1)
 	db "JUSTIN@", TRAINERTYPE_NORMAL
@@ -4597,6 +4599,8 @@ CamperGroup:
 	db -1 ; end
 
 	end_list_items
+
+SECTION "Enemy Trainer Parties 4", ROMX
 
 ExecutiveFGroup:
 	next_list_item ; EXECUTIVEF (1)

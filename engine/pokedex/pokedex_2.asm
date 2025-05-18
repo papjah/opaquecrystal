@@ -320,9 +320,6 @@ DisplayDexMonType_CustomGFX:
 	call GetBaseData
 	ld a, [wBaseType1]
 
-	ld c, a ; farcall will clobber a for the bank
-	predef GetMonTypeIndex ; returns adjusted Type Index in 'c'
-	ld a, c
 ; load the tiles
 	ld hl, TypeLightIconGFX ; gfx\pokedex\types_light.png
 	ld bc, 4 * LEN_2BPP_TILE ; Type GFX are 4 Tiles wide
@@ -355,9 +352,6 @@ DisplayDexMonType_CustomGFX:
 	cp b
 	ret z ; mon doesn't have two types
 
-	ld c, a ; farcall will clobber a for the bank
-	predef GetMonTypeIndex ; returns adjusted Type Index in 'c'
-	ld a, c
 ; load type 2 tiles
 	ld hl, TypeDarkIconGFX ; gfx\pokedex\types_dark.png
 	ld bc, 4 * LEN_2BPP_TILE ; Type GFX are 4 Tiles wide
