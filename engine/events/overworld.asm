@@ -485,6 +485,8 @@ CheckDirection:
 	db FACE_LEFT
 	db FACE_RIGHT
 
+INCLUDE "engine/pokemon/check_learnset.asm"
+
 TrySurfOW::
 ; Checking a tile in the overworld.
 ; Return carry if fail is allowed.
@@ -506,14 +508,31 @@ TrySurfOW::
 	call CheckDirection
 	jr c, .quit
 
+; Step 1 (Check badge)
 	ld de, ENGINE_FOGBADGE
 	call CheckEngineFlag
 	jr c, .quit
 
+; Step 2 (Check if the player has the TM/HM)
+	ld a, HM_SURF
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .quit
+
+; Step 3 (Check if a party Pokemon can learn the move)
+	ld hl, SURF
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 4 (Check if a party Pokemon knows the move)
 	ld hl, SURF
 	call CheckPartyMoveIndex
 	jr c, .quit
-
+.yes
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_ALWAYS_ON_BIKE_F, [hl]
 	jr nz, .quit
@@ -709,12 +728,31 @@ Script_UsedWaterfall:
 	text_end
 
 TryWaterfallOW::
-	ld hl, WATERFALL
-	call CheckPartyMoveIndex
-	jr c, .failed
+; Step 1 (Check badge)
 	ld de, ENGINE_RISINGBADGE
 	call CheckEngineFlag
 	jr c, .failed
+
+; Step 2 (Check if the player has the TM/HM)
+	ld a, HM_WATERFALL
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .failed
+
+; Step 3 (Check if a party Pokemon can learn the move)
+	ld hl, WATERFALL
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 4 (Check if a party Pokemon knows the move)
+	ld hl, WATERFALL
+	call CheckPartyMoveIndex
+	jr c, .failed
+.yes
 	call CheckMapCanWaterfall
 	jr c, .failed
 	ld a, BANK(Script_AskWaterfall)
@@ -1060,14 +1098,32 @@ BouldersMayMoveText:
 	text_end
 
 TryStrengthOW:
-	ld hl, STRENGTH
-	call CheckPartyMoveIndex
-	jr c, .nope
-
+; Step 1 (Check badge)
 	ld de, ENGINE_PLAINBADGE
 	call CheckEngineFlag
 	jr c, .nope
 
+; Step 2 (Check if the player has the TM/HM)
+	ld a, HM_STRENGTH
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .nope
+
+; Step 3 (Check if a party Pokemon can learn the move)
+	ld hl, STRENGTH
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 4 (Check if a party Pokemon knows the move)
+	ld hl, STRENGTH
+	call CheckPartyMoveIndex
+	jr c, .nope
+
+.yes
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_STRENGTH_ACTIVE_F, [hl]
 	jr z, .already_using
@@ -1194,12 +1250,32 @@ DisappearWhirlpool:
 	ret
 
 TryWhirlpoolOW::
-	ld hl, WHIRLPOOL
-	call CheckPartyMoveIndex
-	jr c, .failed
+; Step 1 (Check badge)
 	ld de, ENGINE_GLACIERBADGE
 	call CheckEngineFlag
 	jr c, .failed
+
+; Step 2 (Check if the player has the TM/HM)
+	ld a, HM_WHIRLPOOL
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .failed
+
+; Step 3 (Check if a party Pokemon can learn the move)
+	ld hl, WHIRLPOOL
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 4 (Check if a party Pokemon knows the move)
+	ld hl, WHIRLPOOL
+	call CheckPartyMoveIndex
+	jr c, .failed
+
+.yes
 	call TryWhirlpoolMenu
 	jr c, .failed
 	ld a, BANK(Script_AskWhirlpoolOW)
@@ -1289,10 +1365,26 @@ HeadbuttScript:
 	end
 
 TryHeadbuttOW::
+; Step 1 (Check if the player has the TM/HM)
+	ld a, TM_HEADBUTT
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .no
+
+; Step 2 (Check if a party Pokemon can learn the move)
+	ld hl, HEADBUTT
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 3 (Check if a party Pokemon knows the move)
 	ld hl, HEADBUTT
 	call CheckPartyMoveIndex
 	jr c, .no
-
+.yes
 	ld a, BANK(AskHeadbuttScript)
 	ld hl, AskHeadbuttScript
 	call CallScript
@@ -1413,10 +1505,27 @@ AskRockSmashText:
 	text_end
 
 HasRockSmash:
+; Step 1 (Check if the player has the TM/HM)
+	ld a, TM_ROCK_SMASH
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .no
+
+; Step 2 (Check if a party Pokemon can learn the move)
+	ld hl, ROCK_SMASH
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 3 (Check if a party Pokemon knows the move)
 	ld hl, ROCK_SMASH
 	call CheckPartyMoveIndex
 	jr nc, .yes
-; no
+
+.no
 	ld a, 1
 	jr .done
 .yes
@@ -1765,14 +1874,31 @@ GotOffBikeText:
 	text_end
 
 TryCutOW::
-	ld hl, CUT
-	call CheckPartyMoveIndex
-	jr c, .cant_cut
-
+; Step 1 (Check badge)
 	ld de, ENGINE_HIVEBADGE
 	call CheckEngineFlag
 	jr c, .cant_cut
 
+; Step 2 (Check if the player has the TM/HM)
+	ld a, HM_CUT
+	ld [wCurItem], a
+	ld hl, wNumItems
+	call CheckItem
+	jr z, .cant_cut
+
+; Step 3 (Check if a party Pokemon can learn the move)
+	ld hl, CUT
+	call GetMoveIDFromIndex
+	ld d, a
+	call CheckPartyCanLearnMove
+	and a
+	jr z, .yes
+
+; Step 4 (Check if a party Pokemon knows the move)
+	ld hl, CUT
+	call CheckPartyMoveIndex
+	jr c, .cant_cut
+.yes
 	ld a, BANK(AskCutScript)
 	ld hl, AskCutScript
 	call CallScript
