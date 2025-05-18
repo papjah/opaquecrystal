@@ -5,6 +5,7 @@
 Added:
 - Fairy type. Updated Pokemon, move types, and the type chart
 - Physical/Special split
+- Infinitely reusable TMs
 
 Removed:
 - Removed the 25% of failure for AI status moves

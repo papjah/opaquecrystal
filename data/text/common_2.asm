@@ -1116,6 +1116,11 @@ _PlayersPCDepositItemsText::
 	text "(S)."
 	prompt
 
+_PlayersPCCantDepositText::
+	text "You can't deposit"
+	line "this item."
+	prompt
+
 _PlayersPCNoRoomDepositText::
 	text "There's no room to"
 	line "store items."

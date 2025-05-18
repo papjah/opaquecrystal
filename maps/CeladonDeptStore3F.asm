@@ -48,11 +48,9 @@ CeladonDeptStore3FDirectory:
 	jumptext CeladonDeptStore3FDirectoryText
 
 CeladonDeptStore3FYoungsterText:
-	text "I can't decide"
-	line "which #MON I"
-
-	para "should use this TM"
-	line "on…"
+	text "Should I use"
+	line "this TM on"
+	cont "my #MON..."
 	done
 
 CeladonDeptStore3FGameboyKid1Text:

@@ -484,6 +484,10 @@ PlayerDepositItemMenu:
 	text_end
 
 .TryDepositItem:
+	farcall CheckItemPocket
+	ld a, [wItemAttributeValue]
+	cp TM_HM
+	jr z, .CantDeposit
 	ld a, [wSpriteUpdatesEnabled]
 	push af
 	ld a, FALSE
@@ -495,6 +499,16 @@ PlayerDepositItemMenu:
 	pop af
 	ld [wSpriteUpdatesEnabled], a
 	ret
+
+.CantDeposit
+	ld hl, .CantDepositText
+; push text to queue
+	call MenuTextboxBackup
+	ret
+
+.CantDepositText
+	text_far _PlayersPCCantDepositText
+	text_end
 
 .dw
 ; entries correspond to ITEMMENU_* constants
