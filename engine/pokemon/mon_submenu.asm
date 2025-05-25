@@ -314,7 +314,7 @@ CanUseFlash:
 ; Step 6: Check if Mon can learn move from LVL-UP
 	ld hl, FLASH
 	call GetMoveIDFromIndex
-	call CheckLvlUpMoves
+	call MonSubMenu_CheckLvlUpMoves
 	ret c ; fail
 
 .yes
@@ -359,7 +359,7 @@ CanUseFly:
 ; Step 6: Check if Mon can learn move via LVL-UP
 	ld hl, FLY
 	call GetMoveIDFromIndex
-	call CheckLvlUpMoves
+	call MonSubMenu_CheckLvlUpMoves
 	ret c ; fail
 .yes
 	ld a, MONMENUITEM_FLY
@@ -399,7 +399,7 @@ CanUseSweetScent:
 ; Step 5: Check if mon can learn move via LVL-UP
 	ld hl, SWEET_SCENT
 	call GetMoveIDFromIndex
-	call CheckLvlUpMoves
+	call MonSubMenu_CheckLvlUpMoves
 	ret c ; fail
 .yes
 	ld a, MONMENUITEM_SWEETSCENT
@@ -438,7 +438,7 @@ CanUseDig:
 ; Step 5: Check if Mon can learn move via LVL-UP
 	ld hl, DIG
 	call GetMoveIDFromIndex
-	call CheckLvlUpMoves
+	call MonSubMenu_CheckLvlUpMoves
 	ret c ; fail
 .yes
 	ld a, MONMENUITEM_DIG
@@ -461,7 +461,7 @@ CanUseTeleport:
 ; Step 3: Check if mon learns move via LVL-UP
 	ld hl, TELEPORT
 	call GetMoveIDFromIndex
-	call CheckLvlUpMoves
+	call MonSubMenu_CheckLvlUpMoves
 	ret c ; fail
 .yes
 	ld a, MONMENUITEM_TELEPORT
@@ -487,4 +487,76 @@ CanUseMilkDrink:
 
 	ld a, MONMENUITEM_MILKDRINK
 	call AddMonMenuItem
+	ret
+
+CheckMonCanLearn_TM_HM:
+; Check if wCurPartySpecies can learn move in 'a'
+	ld [wPutativeTMHMMove], a
+	ld a, [wCurPartySpecies]
+	farcall CanLearnTMHMMove
+.check
+	ld a, c
+	and a
+	ret z
+; yes
+	scf
+	ret
+
+CheckMonKnowsMove:
+	ld b, a
+	ld a, MON_MOVES
+	call GetPartyParamLocation
+	ld d, h
+	ld e, l
+	ld c, NUM_MOVES
+.loop
+	ld a, [de]
+	and a
+	jr z, .next
+	cp b
+; knows move
+	jr z, .found
+.next
+	inc de
+	dec c
+	jr nz, .loop
+	ld a, -1
+; mon doesnt know move
+	scf
+	ret
+.found
+	xor a
+	ret z
+
+MonSubMenu_CheckLvlUpMoves:
+	ld d, a
+	ld a, [wTempSpecies]
+	call GetPokemonIndexFromID
+	ld b, h
+	ld c, l
+	ld hl, EvosAttacksPointers
+	ld a, BANK(EvosAttacksPointers)
+	call LoadDoubleIndirectPointer
+	ld [wStatsScreenFlags], a ; bank
+	call FarSkipEvolutions
+.learnset_loop
+	call GetFarByte
+  	and a
+	jr z, .notfound
+	inc hl
+	call GetFarWord
+	call GetMoveIDFromIndex
+	cp d
+	jr z, .found
+	inc hl
+	inc hl
+	jr .learnset_loop
+
+.found
+	xor a
+; move is in lvl up learnset
+	ret
+.notfound
+; move isnt in lvl up learnset
+	scf
 	ret

@@ -109,6 +109,91 @@ CheckPartyMove:
 	scf
 	ret
 
+CheckPartyCanLearnMove:
+; Check if monster in party can learn move d
+	ld e, 0
+	xor a
+	ld [wCurPartyMon], a
+.loop
+	ld c, e
+	ld b, 0
+	ld hl, wPartySpecies
+	add hl, bc
+	ld a, [hl]
+	and a
+	jr z, .no
+	cp -1
+	jr z, .no
+	cp EGG
+	jr z, .next
+
+	ld [wCurPartySpecies], a
+	ld a, d
+; Check the TM/HM/Move Tutor list
+	ld [wPutativeTMHMMove], a
+	push de
+	farcall CanLearnTMHMMove
+	pop de
+.check
+	ld a, c
+	and a
+	jr nz, .yes
+; Check the Pokemon's Level-Up Learnset
+	ld b,b
+	ld a, d
+	push de
+	call OW_CheckLvlUpMoves
+	pop de
+	jr nc, .yes
+; done checking
+
+.next
+	inc e
+	jr .loop
+
+.yes
+	ld a, e
+; which mon can learn the move
+	ld [wCurPartyMon], a
+	xor a
+	ret
+.no
+	ld a, 1
+	ret
+
+OW_CheckLvlUpMoves:
+	ld d, a
+	ld a, [wTempSpecies]
+	call GetPokemonIndexFromID
+	ld b, h
+	ld c, l
+	ld hl, EvosAttacksPointers
+	ld a, BANK(EvosAttacksPointers)
+	call LoadDoubleIndirectPointer
+	ld [wStatsScreenFlags], a ; bank
+	call FarSkipEvolutions
+.learnset_loop
+	call GetFarByte
+  	and a
+	jr z, .notfound
+	inc hl
+	call GetFarWord
+	call GetMoveIDFromIndex
+	cp d
+	jr z, .found
+	inc hl
+	inc hl
+	jr .learnset_loop
+
+.found
+	xor a
+; move is in lvl up learnset
+	ret
+.notfound
+; move isnt in lvl up learnset
+	scf
+	ret
+
 FieldMoveFailed:
 	ld hl, .CantUseItemText
 	call MenuTextboxBackup
@@ -484,8 +569,6 @@ CheckDirection:
 	db FACE_UP
 	db FACE_LEFT
 	db FACE_RIGHT
-
-INCLUDE "engine/pokemon/check_learnset.asm"
 
 TrySurfOW::
 ; Checking a tile in the overworld.
