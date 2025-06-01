@@ -10,12 +10,14 @@ MACRO box_struct
 \1Moves::          ds NUM_MOVES
 \1ID::             dw
 \1Exp::            ds 3
-\1StatExp::
-\1HPExp::          dw
-\1AtkExp::         dw
-\1DefExp::         dw
-\1SpdExp::         dw
-\1SpcExp::         dw
+\1EVs::
+\1HPEVs::		   db
+\1AtkEVs::		   db
+\1DefEVs::		   db
+\1SpdEVs::		   db
+\1SpclAtkEVs::	   db
+\1SpclDefEVs::	   db
+\1Padding::		   ds 4
 \1DVs::            dw
 \1PP::             ds NUM_MOVES
 \1Happiness::      db
