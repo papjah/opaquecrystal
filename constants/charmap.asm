@@ -16,6 +16,8 @@
 	charmap "<MOM>",     $49 ; wMomsName
 	charmap "<PKMN>",    $4a ; "<PK><MN>"
 	charmap "<_CONT>",   $4b ; implements "<CONT>"
+; While "<SCROLL>" this is used in sharply rose or sharply fell stat texts, this will be
+; adjusted to give the player time to read.
 	charmap "<SCROLL>",  $4c
 	charmap "<NEXT>",    $4e
 	charmap "<LINE>",    $4f
@@ -35,6 +37,8 @@
 	charmap "<TRAINER>", $5d ; "TRAINER"
 	charmap "<ROCKET>",  $5e ; "ROCKET"
 	charmap "<DEXEND>",  $5f
+	charmap "<ATPRA>",   $60
+	charmap "<ATDNE>",   $61
 
 ; Actual characters (from gfx/font/font_extra.png)
 
@@ -52,17 +56,11 @@
 	charmap "<BOLD_L>",  $6b ; unused
 	charmap "<BOLD_M>",  $6c ; unused
 	charmap "<COLON>",   $6d ; colon with tinier dots than ":"
-	charmap "ぃ",         $6e ; hiragana small i, unused
-	charmap "ぅ",         $6f ; hiragana small u, unused
 	charmap "<PO>",      $70
 	charmap "<KE>",      $71
 	charmap "“",         $72 ; opening quote
 	charmap "”",         $73 ; closing quote
-	charmap "·",         $74 ; middle dot, unused
 	charmap "…",         $75 ; ellipsis
-	charmap "ぁ",         $76 ; hiragana small a, unused
-	charmap "ぇ",         $77 ; hiragana small e, unused
-	charmap "ぉ",         $78 ; hiragana small o, unused
 
 	charmap "┌",         $79
 	charmap "─",         $7a
@@ -80,7 +78,6 @@
 
 	charmap "<DO>",      $70 ; hiragana small do, unused
 	charmap "◀",         $71
-	charmap "『",         $72 ; Japanese opening quote, unused
 	charmap "<ID>",      $73
 	charmap "№",         $74
 
@@ -225,12 +222,9 @@
 	charmap "<TTE>",     $1e ; "って"
 	charmap "<WO>",      $1f ; "を　"
 	charmap "<TA!>",     $22 ; "た！"
-	charmap "<KOUGEKI>", $23 ; "こうげき"
 	charmap "<WA>",      $24 ; "は　"
 	charmap "<NO>",      $25 ; "の　"
 	charmap "<ROUTE>",   $35 ; "ばん　どうろ"
-	charmap "<WATASHI>", $36 ; "わたし"
-	charmap "<KOKO_WA>", $37 ; "ここは"
 	charmap "<GA>",      $4a ; "が　"
 
 ; Japanese kana, for those bits of text that were not translated to English

@@ -186,8 +186,6 @@ CheckStringForErrors:
 	jr z, .NextChar
 	cp "@"
 	jr z, .Done
-	cp "ガ"
-	jr c, .Fail
 	cp "<PLAY_G>"
 	jr c, .NextChar
 	cp "<JP_18>" + 1
@@ -233,8 +231,6 @@ CheckStringForErrors_IgnoreTerminator:
 	cp "@"
 	jr z, .next
 
-	cp "ガ"
-	jr c, .end
 	cp "<PLAY_G>"
 	jr c, .next
 	cp "<JP_18>" + 1

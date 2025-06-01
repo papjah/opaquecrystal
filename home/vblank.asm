@@ -333,7 +333,7 @@ VBlank_Serial::
 	xor a
 	ld [wVBlankOccurred], a
 
-	call AskSerial
+; call AskSerial
 
 	ld a, BANK(_UpdateSound)
 	rst Bankswitch

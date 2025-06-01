@@ -251,15 +251,14 @@ ENDM
 	dict "<NEXT>",    NextLineChar
 	dict "<CR>",      CarriageReturnChar
 	dict "<NULL>",    NullChar
-	dict "<SCROLL>",  _ContTextNoPause
+	dict "<SCROLL>",  _ContTextPauseShort
 	dict "<_CONT>",   _ContText
 	dict "<PARA>",    Paragraph
+	dict "<ATPRA>",   AutoParagraph
 	dict "<MOM>",     PrintMomsName
 	dict "<PLAYER>",  PrintPlayerName
 	dict "<RIVAL>",   PrintRivalName
 	dict "<ROUTE>",   PlaceJPRoute
-	dict "<WATASHI>", PlaceWatashi
-	dict "<KOKO_WA>", PlaceKokoWa
 	dict "<RED>",     PrintRedsName
 	dict "<GREEN>",   PrintGreensName
 	dict "#",         PlacePOKe
@@ -267,11 +266,11 @@ ENDM
 	dict "<ROCKET>",  RocketChar
 	dict "<TM>",      TMChar
 	dict "<TRAINER>", TrainerChar
-	dict "<KOUGEKI>", PlaceKougeki
 	dict "<LF>",      LineFeedChar
 	dict "<CONT>",    ContText
 	dict "<……>",      SixDotsChar
 	dict "<DONE>",    DoneText
+	dict "<ATDNE>",   AutoDoneText
 	dict "<PROMPT>",  PromptText
 	dict "<PKMN>",    PlacePKMN
 	dict "<POKE>",    PlacePOKE
@@ -343,13 +342,10 @@ TMChar:       print_name TMCharText
 PCChar:       print_name PCCharText
 RocketChar:   print_name RocketCharText
 PlacePOKe:    print_name PlacePOKeText
-PlaceKougeki: print_name KougekiText
 SixDotsChar:  print_name SixDotsCharText
 PlacePKMN:    print_name PlacePKMNText
 PlacePOKE:    print_name PlacePOKEText
 PlaceJPRoute: print_name PlaceJPRouteText
-PlaceWatashi: print_name PlaceWatashiText
-PlaceKokoWa:  print_name PlaceKokoWaText
 
 PlaceMoveTargetsName::
 	ldh a, [hBattleTurn]
@@ -434,7 +430,6 @@ TrainerCharText:: db "TRAINER@"
 PCCharText::      db "PC@"
 RocketCharText::  db "ROCKET@"
 PlacePOKeText::   db "POKé@"
-KougekiText::     db "こうげき@"
 SixDotsCharText:: db "……@"
 EnemyText::       db "Enemy @"
 PlacePKMNText::   db "<PK><MN>@"
@@ -443,7 +438,6 @@ String_Space::    db " @"
 ; These strings have been dummied out.
 PlaceJPRouteText::
 PlaceWatashiText::
-PlaceKokoWaText:: db "@"
 KunSuffixText::   db "@"
 ChanSuffixText::  db "@"
 
@@ -531,6 +525,20 @@ Paragraph::
 	pop de
 	jp NextChar
 
+AutoParagraph::
+	push de
+	call Text_WaitBGMap
+	ld c, 10
+	call DelayFrames
+	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
+	lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
+	call ClearBox
+	ld c, 20
+	call DelayFrames
+	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
+	pop de
+	jp NextChar
+
 _ContText::
 	ld a, [wLinkMode]
 	or a
@@ -554,6 +562,16 @@ _ContTextNoPause::
 	call TextScroll
 	call TextScroll
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
+	pop de
+	jp NextChar
+
+_ContTextPauseShort::
+	push de
+	call TextScroll
+	call TextScroll
+	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
+	ld c, 5
+	call DelayFrames
 	pop de
 	jp NextChar
 
@@ -603,6 +621,12 @@ DoneText::
 
 .stop:
 	text_end
+
+AutoDoneText::
+	call Text_WaitBGMap
+	ld c, 20
+	call DelayFrames
+	jr DoneText
 
 NullChar::
 	ld a, "?"
